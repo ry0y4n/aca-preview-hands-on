@@ -13,9 +13,9 @@ permissions:
   # id-token: write
 
 env:
-  CONTAINER_REGISTRY: acrmomosukeacapreview.azurecr.io # TODO: container registry name like `foobar.azurecr.io`
-  RESOURCE_GROUP_NAME: aca-sample-rg # TODO: Azure Container Apps resource name
-  CONTAINERAPP_NAME: aca-preview-hands-on-app # TODO: resource group name where the target Azure Container Apps resource in.
+  CONTAINER_REGISTRY: acracapreview.azurecr.io # TODO: container registry name like `foobar.azurecr.io`
+  RESOURCE_GROUP_NAME: aca-preview-hands-on-rg # TODO: Azure Container Apps resource name
+  CONTAINERAPP_NAME: aca-preview-app # TODO: resource group name where the target Azure Container Apps resource in.
 
 jobs:
   add-revision:
