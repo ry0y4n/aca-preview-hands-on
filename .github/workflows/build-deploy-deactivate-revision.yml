@@ -2,7 +2,7 @@ name: Build, Deploy and Deactivate ACA revision
 
 on:
   pull_request:
-    types: [opened, closed]
+    types: [opened, synchronize, closed]
 
 permissions:
   # for `create-or-update-comment` action
@@ -20,7 +20,7 @@ env:
 jobs:
   add-revision:
     runs-on: ubuntu-18.04
-    if: github.event.action == 'opened'
+    if: github.event.action != 'closed'
 
     steps:
       - name: Checkout to the branch
@@ -57,7 +57,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Add revision to ACA
-        uses: horihiro/aca-preview@v0.0.1-alpha2
+        uses: Azure/aca-review-apps@v0.1.0
         id: aca_new_revision
         with:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
@@ -75,7 +75,7 @@ jobs:
 
   deactivate-revision:
     runs-on: ubuntu-18.04
-    if: github.event.action == 'closed'
+    if: github.event.action != 'opened'
 
     steps:
       - name: Set short version of Commit hash  to env
@@ -83,7 +83,11 @@ jobs:
           echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
           echo "SHORT_HASH=${COMMIT_HASH:0:7}" >> $GITHUB_ENV
         env:
-          COMMIT_HASH: ${{ github.event.pull_request.head.sha }}
+          COMMIT_HASH: |
+            ${{
+              github.event.action == 'closed' && github.event.pull_request.head.sha ||
+              github.event.action == 'synchronize' && github.event.before
+            }}
 
       - name: Azure Login
         uses: azure/login@v1
@@ -91,7 +95,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deactivate Preview revision on ACA
-        uses: horihiro/aca-preview@v0.0.1-alpha2
+        uses: Azure/aca-review-apps@v0.1.0
         with:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
           name: ${{ env.CONTAINERAPP_NAME }}
@@ -114,4 +118,4 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           edit-mode: replace
           body: |
-            Reivision ${{ env.CONTAINERAPP_NAME }}--${{ env.SHORT_HASH }} is deactivated.
+            Revision ${{ env.CONTAINERAPP_NAME }}--${{ env.SHORT_HASH }} is deactivated.
