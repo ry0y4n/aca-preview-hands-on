@@ -31,7 +31,7 @@ LOCATION="リソースロケーション"
 CONTAINERAPPS_ENVIRONMENT="Container Apps環境名"
 CONTAINER_APP_NAME="コンテナーアプリ名"
 CONTAINER_REGISTRY="コンテナレジストリ名"
-REPOSITORY_NAME="レジストリ名"
+REPOSITORY_NAME="レポジトリ名"
 SERVICE_PRINCIPAL_NAME="サービスプリンシパル名"
 ```
 
