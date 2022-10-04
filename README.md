@@ -25,12 +25,14 @@ az login
 ### 環境変数設定
 
 ```bash
+SUBSCRIPTION_ID="サブスクリプションID"
 RESOURCE_GROUP="リソースグループ名"
 LOCATION="リソースロケーション"
 CONTAINERAPPS_ENVIRONMENT="Container Apps環境名"
 CONTAINER_APP_NAME="コンテナーアプリ名"
 CONTAINER_REGISTRY="コンテナレジストリ名"
 REPOSITORY_NAME="レジストリ名"
+SERVICE_PRINCIPAL_NAME="サービスプリンシパル名"
 ```
 
 ### リソースグループ作成
@@ -92,9 +94,9 @@ az containerapp create \
 ### サービスプリンシパルを発行
 
 ```bash
-az ad sp create-for-rbac --name momoServicePrincipal \  
+az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME \  
                          --role contributor \
-                         --scopes /subscriptions/<サブスクリプションID>/resourceGroups/$RESOURCE_GROUP
+                         --scopes /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP
 ```
 
 ### GitHubシークレットを作成
